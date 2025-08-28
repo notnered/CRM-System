@@ -36,7 +36,7 @@ export default function FilterTask({
             };
         });
         setFilters(unitedData);
-    }, []);
+    }, [todoInfo]);
 
     return (
         <div className={styles.filterBox}>
