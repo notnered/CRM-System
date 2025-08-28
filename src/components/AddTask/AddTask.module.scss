@@ -1,4 +1,4 @@
-// @use '../../variables.scss' as *;
+@use '../../variables.scss' as *;
 
 .box {
     display: flex;
@@ -11,12 +11,16 @@
         outline: none;
         border: 1px solid #999;
         border-radius: 0.25rem;
+        font-size: 1rem;
+        font-family: $font-family;
     }
     .button {
         min-width: fit-content;
         padding: 0.75rem 0.5rem;
         background: #0096d1;
         border: none;
+        font-size: 1rem;
+        font-family: $font-family;
         border-radius: 0.25rem;
         color: #fff;
         cursor: pointer;
