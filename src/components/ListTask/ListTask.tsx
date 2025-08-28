@@ -18,7 +18,7 @@ export default function ListTask({
     appearToast,
 }: {
     currentFilter: Filter;
-    refreshFunc: () => void;
+    refreshFunc: (filter?: Filter) => void;
     todoList: Task[];
     appearToast: (notification: NotificationType) => void;
 }) {
@@ -28,42 +28,26 @@ export default function ListTask({
         setTasks(todoList);
     }, [todoList]);
 
+    if (tasks.length === 0) {
+        return (
+            <div className={styles.list}>
+                <div className={styles.empty}>Список задач пуст</div>
+            </div>
+        );
+    }
+
     return (
         <div className={styles.list}>
             {tasks.map((task, index) => {
-                switch (currentFilter) {
-                    case 'completed':
-                        return (
-                            task.isDone && (
-                                <CardTask
-                                    task={task}
-                                    refreshFunc={refreshFunc}
-                                    appearToast={appearToast}
-                                    key={`${task.id}-${index}`}
-                                />
-                            )
-                        );
-                    case 'inWork':
-                        return (
-                            !task.isDone && (
-                                <CardTask
-                                    task={task}
-                                    refreshFunc={refreshFunc}
-                                    appearToast={appearToast}
-                                    key={`${task.id}-${index}`}
-                                />
-                            )
-                        );
-                    default:
-                        return (
-                            <CardTask
-                                task={task}
-                                refreshFunc={refreshFunc}
-                                appearToast={appearToast}
-                                key={`${task.id}-${index}`}
-                            />
-                        );
-                }
+                return (
+                    <CardTask
+                        task={task}
+                        currentFilter={currentFilter}
+                        refreshFunc={refreshFunc}
+                        appearToast={appearToast}
+                        key={`${task.id}-${index}`}
+                    />
+                );
             })}
         </div>
     );

@@ -5,14 +5,17 @@ import CrossIcon from '../../assets/cross.svg?react';
 import type { Task } from '../ListTask/ListTask';
 import styles from './CardTask.module.scss';
 import type { NotificationType } from '../Notification/Notification';
+import type { Filter } from '../../App';
 
 export default function CardTask({
     task,
+    currentFilter,
     refreshFunc,
     appearToast,
 }: {
     task: Task;
-    refreshFunc: () => void;
+    currentFilter: Filter;
+    refreshFunc: (filter?: Filter) => void;
     appearToast: (notification: NotificationType) => void;
 }) {
     const [complete, setComplete] = useState<boolean>(task.isDone);
@@ -40,7 +43,7 @@ export default function CardTask({
         }
 
         setComplete(isDoneStatus);
-        refreshFunc();
+        refreshFunc(currentFilter);
     }
 
     async function handleDelete(id: number) {
@@ -62,7 +65,7 @@ export default function CardTask({
             type: 'success',
             message: 'Задача удалена',
         });
-        refreshFunc();
+        refreshFunc(currentFilter);
     }
 
     async function handleEdit(task: Task) {
@@ -115,7 +118,7 @@ export default function CardTask({
             message: 'Задача обновлена',
         });
         setShowModal(false);
-        refreshFunc();
+        refreshFunc(currentFilter);
     }
 
     return (
