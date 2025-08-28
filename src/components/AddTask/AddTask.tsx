@@ -14,6 +14,11 @@ export default function AddTask({ refreshFunc }: { refreshFunc: () => void }) {
             return;
         }
 
+        if (inputRef.current.value.length > 64) {
+            console.error('Длина новой задачи более 64 символов');
+            return;
+        }
+
         const taskTitle = inputRef.current.value;
 
         const response = await fetch('https://easydev.club/api/v1/todos', {
