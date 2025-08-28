@@ -1,21 +1,37 @@
 import { useRef } from 'react';
 import styles from './AddTask.module.scss';
+import type { NotificationType } from '../Notification/Notification';
 
-export default function AddTask({ refreshFunc }: { refreshFunc: () => void }) {
+export default function AddTask({
+    refreshFunc,
+    appearToast,
+}: {
+    refreshFunc: () => void;
+    appearToast: (notification: NotificationType) => void;
+}) {
     const inputRef = useRef<HTMLInputElement>(null);
     async function handleSubmit() {
         if (!inputRef.current) {
-            console.error('Текст задачи пустой');
+            appearToast({
+                type: 'error',
+                message: 'Не удается найти ссылку на ввод',
+            });
             return;
         }
 
         if (inputRef.current.value.length < 2) {
-            console.error('Длина задачи меньше 2 символов');
+            appearToast({
+                type: 'error',
+                message: 'Длина новой задачи меньше 2 символов',
+            });
             return;
         }
 
         if (inputRef.current.value.length > 64) {
-            console.error('Длина новой задачи более 64 символов');
+            appearToast({
+                type: 'error',
+                message: 'Длина новой задачи более 64 символов',
+            });
             return;
         }
 
@@ -32,10 +48,17 @@ export default function AddTask({ refreshFunc }: { refreshFunc: () => void }) {
             }),
         });
         if (!response.ok) {
-            console.error('Ошибка при добавлении задачи');
+            appearToast({
+                type: 'error',
+                message: 'Не удалось добавить задачу',
+            });
             return;
         }
 
+        appearToast({
+            type: 'success',
+            message: 'Задача успешно добавлена',
+        });
         refreshFunc();
     }
 

@@ -4,13 +4,16 @@ import { useRef, useState } from 'react';
 import CrossIcon from '../../assets/cross.svg?react';
 import type { Task } from '../ListTask/ListTask';
 import styles from './CardTask.module.scss';
+import type { NotificationType } from '../Notification/Notification';
 
 export default function CardTask({
     task,
     refreshFunc,
+    appearToast,
 }: {
     task: Task;
     refreshFunc: () => void;
+    appearToast: (notification: NotificationType) => void;
 }) {
     const [complete, setComplete] = useState<boolean>(task.isDone);
     const [showModal, setShowModal] = useState<boolean>(false);
@@ -29,9 +32,13 @@ export default function CardTask({
             }
         );
         if (!response.ok) {
-            console.error('Ошибка при обновлении статуса задачи');
+            appearToast({
+                type: 'error',
+                message: 'Не удалось обновить задачу',
+            });
             return;
         }
+
         setComplete(isDoneStatus);
         refreshFunc();
     }
@@ -44,26 +51,42 @@ export default function CardTask({
             }
         );
         if (!response.ok) {
-            console.error('Ошибка при удалении задачи');
+            appearToast({
+                type: 'error',
+                message: 'Не удалось обновить задачу',
+            });
             return;
         }
 
+        appearToast({
+            type: 'success',
+            message: 'Задача удалена',
+        });
         refreshFunc();
     }
 
     async function handleEdit(task: Task) {
         if (!inputRef.current) {
-            console.error('Текст задачи пустой');
+            appearToast({
+                type: 'error',
+                message: 'Не удается найти ссылку на ввод',
+            });
             return;
         }
 
         if (inputRef.current.value.length < 2) {
-            console.error('Длина новой задачи меньше 2 символов');
+            appearToast({
+                type: 'error',
+                message: 'Длина новой задачи меньше 2 символов',
+            });
             return;
         }
 
         if (inputRef.current.value.length > 64) {
-            console.error('Длина новой задачи более 64 символов');
+            appearToast({
+                type: 'error',
+                message: 'Длина новой задачи более 64 символов',
+            });
             return;
         }
 
@@ -79,10 +102,17 @@ export default function CardTask({
             }
         );
         if (!response.ok) {
-            console.error('Ошибка при редактировании задачи');
+            appearToast({
+                type: 'error',
+                message: 'Не удалось обновить задачу',
+            });
             return;
         }
 
+        appearToast({
+            type: 'success',
+            message: 'Задача обновлена',
+        });
         setShowModal(false);
         refreshFunc();
     }

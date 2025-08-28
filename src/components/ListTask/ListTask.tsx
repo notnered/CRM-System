@@ -1,5 +1,6 @@
 import type { Filter } from '../../App';
 import CardTask from '../CardTask/CardTask';
+import type { NotificationType } from '../Notification/Notification';
 import styles from './ListTask.module.scss';
 import { useEffect, useState } from 'react';
 
@@ -14,10 +15,12 @@ export default function ListTask({
     currentFilter,
     refreshFunc,
     todoList,
+    appearToast,
 }: {
     currentFilter: Filter;
     refreshFunc: () => void;
     todoList: Task[];
+    appearToast: (notification: NotificationType) => void;
 }) {
     const [tasks, setTasks] = useState<Task[]>(todoList);
 
@@ -35,6 +38,7 @@ export default function ListTask({
                                 <CardTask
                                     task={task}
                                     refreshFunc={refreshFunc}
+                                    appearToast={appearToast}
                                     key={`${task.id}-${index}`}
                                 />
                             )
@@ -45,6 +49,7 @@ export default function ListTask({
                                 <CardTask
                                     task={task}
                                     refreshFunc={refreshFunc}
+                                    appearToast={appearToast}
                                     key={`${task.id}-${index}`}
                                 />
                             )
@@ -54,6 +59,7 @@ export default function ListTask({
                             <CardTask
                                 task={task}
                                 refreshFunc={refreshFunc}
+                                appearToast={appearToast}
                                 key={`${task.id}-${index}`}
                             />
                         );
