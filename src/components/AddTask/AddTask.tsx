@@ -1,12 +1,15 @@
 import { useRef } from 'react';
 import styles from './AddTask.module.scss';
 import type { NotificationType } from '../Notification/Notification';
+import type { Filter } from '../../App';
 
 export default function AddTask({
+    currentFilter,
     refreshFunc,
     appearToast,
 }: {
-    refreshFunc: () => void;
+    currentFilter: Filter;
+    refreshFunc: (filter?: Filter) => void;
     appearToast: (notification: NotificationType) => void;
 }) {
     const inputRef = useRef<HTMLInputElement>(null);
@@ -59,7 +62,7 @@ export default function AddTask({
             type: 'success',
             message: 'Задача успешно добавлена',
         });
-        refreshFunc();
+        refreshFunc(currentFilter);
         inputRef.current.value = '';
     }
 

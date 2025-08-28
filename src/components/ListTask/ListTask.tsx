@@ -18,7 +18,7 @@ export default function ListTask({
     appearToast,
 }: {
     currentFilter: Filter;
-    refreshFunc: () => void;
+    refreshFunc: (filter?: Filter) => void;
     todoList: Task[];
     appearToast: (notification: NotificationType) => void;
 }) {
@@ -27,6 +27,14 @@ export default function ListTask({
     useEffect(() => {
         setTasks(todoList);
     }, [todoList]);
+
+    if (tasks.length === 0) {
+        return (
+            <div className={styles.list}>
+                <div className={styles.empty}>Список задач пуст</div>
+            </div>
+        );
+    }
 
     return (
         <div className={styles.list}>
@@ -37,6 +45,7 @@ export default function ListTask({
                             task.isDone && (
                                 <CardTask
                                     task={task}
+                                    currentFilter={currentFilter}
                                     refreshFunc={refreshFunc}
                                     appearToast={appearToast}
                                     key={`${task.id}-${index}`}
@@ -48,6 +57,7 @@ export default function ListTask({
                             !task.isDone && (
                                 <CardTask
                                     task={task}
+                                    currentFilter={currentFilter}
                                     refreshFunc={refreshFunc}
                                     appearToast={appearToast}
                                     key={`${task.id}-${index}`}
@@ -58,6 +68,7 @@ export default function ListTask({
                         return (
                             <CardTask
                                 task={task}
+                                currentFilter={currentFilter}
                                 refreshFunc={refreshFunc}
                                 appearToast={appearToast}
                                 key={`${task.id}-${index}`}

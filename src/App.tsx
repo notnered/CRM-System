@@ -27,8 +27,10 @@ function App() {
         null
     );
 
-    async function refreshData() {
-        const response = await fetch('https://easydev.club/api/v1/todos');
+    async function refreshData(filter: Filter = 'all') {
+        const response = await fetch(
+            `https://easydev.club/api/v1/todos?filter=${filter}`
+        );
         const json = await response.json();
         setTodosData(json);
     }
@@ -43,9 +45,9 @@ function App() {
 
     useEffect(() => {
         (async function () {
-            refreshData();
+            refreshData(filter);
         })();
-    }, []);
+    }, [filter]);
 
     if (!todosData) return null;
 
@@ -57,6 +59,7 @@ function App() {
             <div className={styles.container}>
                 <div className={styles.appBox}>
                     <AddTask
+                        currentFilter={filter}
                         refreshFunc={refreshData}
                         appearToast={appearToast}
                     />
