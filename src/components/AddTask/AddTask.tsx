@@ -19,7 +19,9 @@ export default function AddTask({
             return;
         }
 
-        if (inputRef.current.value.length < 2) {
+        const inputValue = inputRef.current.value.trim();
+
+        if (inputValue.length < 2) {
             appearToast({
                 type: 'error',
                 message: 'Длина новой задачи меньше 2 символов',
@@ -27,7 +29,7 @@ export default function AddTask({
             return;
         }
 
-        if (inputRef.current.value.length > 64) {
+        if (inputValue.length > 64) {
             appearToast({
                 type: 'error',
                 message: 'Длина новой задачи более 64 символов',
@@ -35,15 +37,13 @@ export default function AddTask({
             return;
         }
 
-        const taskTitle = inputRef.current.value;
-
         const response = await fetch('https://easydev.club/api/v1/todos', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                title: taskTitle,
+                title: inputValue,
                 isDone: false,
             }),
         });
@@ -60,6 +60,7 @@ export default function AddTask({
             message: 'Задача успешно добавлена',
         });
         refreshFunc();
+        inputRef.current.value = '';
     }
 
     return (

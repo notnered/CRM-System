@@ -74,7 +74,9 @@ export default function CardTask({
             return;
         }
 
-        if (inputRef.current.value.length < 2) {
+        const inputValue = inputRef.current.value.trim();
+
+        if (inputValue.length < 2) {
             appearToast({
                 type: 'error',
                 message: 'Длина новой задачи меньше 2 символов',
@@ -82,7 +84,7 @@ export default function CardTask({
             return;
         }
 
-        if (inputRef.current.value.length > 64) {
+        if (inputValue.length > 64) {
             appearToast({
                 type: 'error',
                 message: 'Длина новой задачи более 64 символов',
@@ -90,14 +92,13 @@ export default function CardTask({
             return;
         }
 
-        const newTitle = inputRef.current.value;
         const response = await fetch(
             `https://easydev.club/api/v1/todos/${task.id}`,
             {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    title: newTitle,
+                    title: inputValue,
                 }),
             }
         );
