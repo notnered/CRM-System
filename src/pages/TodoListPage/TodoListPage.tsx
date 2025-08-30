@@ -1,26 +1,22 @@
-import AddTask from './components/AddTask/AddTask';
-import FilterTask from './components/FilterTask/FilterTask';
-import ListTask, { type Task } from './components/ListTask/ListTask';
+// COMPONENTS
+import AddTask from '../../components/AddTask/AddTask';
+import FilterTask from '../../components/FilterTask/FilterTask';
+import ListTask from '../../components/ListTask/ListTask';
+import Notification from '../../components/Notification/Notification';
+
+// TYPES
+import type { Filter, Response, NotificationType } from '../../types';
+
+// API
+import { getData } from '../../api/fetchData';
+
+// HOOKS
 import { useState, useEffect } from 'react';
-import Notification, {
-    type NotificationType,
-} from './components/Notification/Notification';
-import styles from './App.module.scss';
 
-export type Response = {
-    data: Task[];
-    info: {
-        all: number;
-        completed: number;
-        inWork: number;
-    };
-    meta: {
-        totalAmount: number;
-    };
-};
-export type Filter = 'all' | 'inWork' | 'completed';
+// STYLES
+import styles from './TodoListPage.module.scss';
 
-function App() {
+export default function TodoListPage() {
     const [todosData, setTodosData] = useState<Response | null>(null);
     const [filter, setFilter] = useState<Filter>('all');
     const [notification, setNotification] = useState<NotificationType | null>(
@@ -28,14 +24,11 @@ function App() {
     );
 
     async function refreshData(filter: Filter = 'all') {
-        const response = await fetch(
-            `https://easydev.club/api/v1/todos?filter=${filter}`
-        );
-        const json = await response.json();
-        setTodosData(json);
+        const data = await getData(filter);
+        setTodosData(data);
     }
 
-    async function filterCallback(filter: Filter) {
+    async function filterCallback(filter: Filter = 'all') {
         setFilter(filter);
     }
 
@@ -79,5 +72,3 @@ function App() {
         </>
     );
 }
-
-export default App;
