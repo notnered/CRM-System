@@ -1,11 +1,19 @@
+// COMPONENTs
 import DeleteIcon from '../../assets/delete-rounded.svg?react';
 import EditIcon from '../../assets/edit-rounded.svg?react';
+import ModalWindow from '../ModalWindow/ModalWindow';
+
+// TYPES
+import type { Task, Filter, NotificationType } from '../../types';
+
+// HOOKS
 import { useRef, useState } from 'react';
-import CrossIcon from '../../assets/cross.svg?react';
-import type { Task } from '../ListTask/ListTask';
+
+// API
+import { deleteData, putData } from '../../api/fetchData';
+
+// STYLES
 import styles from './CardTask.module.scss';
-import type { NotificationType } from '../Notification/Notification';
-import type { Filter } from '../../App';
 
 export default function CardTask({
     task,
@@ -20,52 +28,39 @@ export default function CardTask({
 }) {
     const [complete, setComplete] = useState<boolean>(task.isDone);
     const [showModal, setShowModal] = useState<boolean>(false);
-    const inputRef = useRef<HTMLInputElement>(null);
+    const inputRef = useRef<HTMLInputElement | null>(null);
 
-    async function handleComplete(id: number) {
+    async function handleComplete(id: number): Promise<void> {
         const isDoneStatus = !complete;
-        const response = await fetch(
-            `https://easydev.club/api/v1/todos/${id}`,
-            {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    isDone: isDoneStatus,
-                }),
-            }
-        );
-        if (!response.ok) {
+
+        try {
+            await putData(id, { isDone: isDoneStatus });
+            setComplete(isDoneStatus);
+        } catch (err) {
             appearToast({
                 type: 'error',
                 message: 'Не удалось обновить задачу',
             });
-            return;
+        } finally {
+            refreshFunc(currentFilter);
         }
-
-        setComplete(isDoneStatus);
-        refreshFunc(currentFilter);
     }
 
-    async function handleDelete(id: number) {
-        const response = await fetch(
-            `https://easydev.club/api/v1/todos/${id}`,
-            {
-                method: 'DELETE',
-            }
-        );
-        if (!response.ok) {
+    async function handleDelete(id: number): Promise<void> {
+        try {
+            await deleteData(id);
+            appearToast({
+                type: 'success',
+                message: 'Задача удалена',
+            });
+        } catch (err) {
             appearToast({
                 type: 'error',
-                message: 'Не удалось обновить задачу',
+                message: 'Не удалось удалить задачу',
             });
-            return;
+        } finally {
+            refreshFunc(currentFilter);
         }
-
-        appearToast({
-            type: 'success',
-            message: 'Задача удалена',
-        });
-        refreshFunc(currentFilter);
     }
 
     async function handleEdit(task: Task) {
@@ -95,67 +90,33 @@ export default function CardTask({
             return;
         }
 
-        const response = await fetch(
-            `https://easydev.club/api/v1/todos/${task.id}`,
-            {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    title: inputValue,
-                }),
-            }
-        );
-        if (!response.ok) {
+        try {
+            await putData(task.id, { title: inputValue });
+            appearToast({
+                type: 'success',
+                message: 'Задача обновлена',
+            });
+        } catch (err) {
             appearToast({
                 type: 'error',
                 message: 'Не удалось обновить задачу',
             });
-            return;
+        } finally {
+            setShowModal(false);
+            refreshFunc(currentFilter);
         }
-
-        appearToast({
-            type: 'success',
-            message: 'Задача обновлена',
-        });
-        setShowModal(false);
-        refreshFunc(currentFilter);
     }
 
     return (
         <>
             {showModal && (
-                <div className={styles.modalBg}>
-                    <div className={styles.modal}>
-                        <div
-                            className={styles.modal__close}
-                            onClick={() => setShowModal(!showModal)}
-                        >
-                            <CrossIcon
-                                color='black'
-                                width={'1.5rem'}
-                                height={'1.5rem'}
-                            />
-                        </div>
-                        <label className={styles.modal__label}>
-                            <span className={styles.modal__labelText}>
-                                Текст задачи: {task.id}
-                            </span>
-                            <input
-                                className={styles.modal__input}
-                                ref={inputRef}
-                                placeholder='Новый текст задачи'
-                                type='text'
-                                required
-                            />
-                        </label>
-                        <button
-                            onClick={() => handleEdit(task)}
-                            className={styles.modal__button}
-                        >
-                            Сохранить
-                        </button>
-                    </div>
-                </div>
+                <ModalWindow
+                    handleEdit={handleEdit}
+                    showModal={showModal}
+                    setShowModal={setShowModal}
+                    inputRef={inputRef}
+                    task={task}
+                />
             )}
             <div className={styles.card}>
                 <div className={styles.status}>

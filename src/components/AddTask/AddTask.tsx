@@ -1,7 +1,14 @@
+// TYPES
+import type { Filter, NotificationType } from '../../types';
+
+// HOOKS
 import { useRef } from 'react';
+
+// API
+import { postData } from '../../api/fetchData';
+
+// STYLES
 import styles from './AddTask.module.scss';
-import type { NotificationType } from '../Notification/Notification';
-import type { Filter } from '../../App';
 
 export default function AddTask({
     currentFilter,
@@ -40,30 +47,21 @@ export default function AddTask({
             return;
         }
 
-        const response = await fetch('https://easydev.club/api/v1/todos', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                title: inputValue,
-                isDone: false,
-            }),
-        });
-        if (!response.ok) {
+        try {
+            await postData({ title: inputValue, isDone: false });
+            appearToast({
+                type: 'success',
+                message: 'Задача успешно добавлена',
+            });
+        } catch (err) {
             appearToast({
                 type: 'error',
                 message: 'Не удалось добавить задачу',
             });
-            return;
+        } finally {
+            refreshFunc(currentFilter);
+            inputRef.current.value = '';
         }
-
-        appearToast({
-            type: 'success',
-            message: 'Задача успешно добавлена',
-        });
-        refreshFunc(currentFilter);
-        inputRef.current.value = '';
     }
 
     return (
