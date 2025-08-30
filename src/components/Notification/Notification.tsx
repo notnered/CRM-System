@@ -1,12 +1,15 @@
-import { useEffect, useState } from 'react';
+// COMPONENTs
 import ErrorIcon from '../../assets/error.svg?react';
 import SuccessIcon from '../../assets/success.svg?react';
-import styles from './Notification.module.scss';
 
-export type NotificationType = {
-    type: 'success' | 'error';
-    message: string;
-};
+// TYPES
+import type { NotificationType } from '../../types';
+
+// HOOKS
+import { useEffect, useState } from 'react';
+
+// STYLES
+import styles from './Notification.module.scss';
 
 export default function Notification({
     notification,

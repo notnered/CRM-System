@@ -1,15 +1,14 @@
-import type { Filter } from '../../App';
+// COMPONENTs
 import CardTask from '../CardTask/CardTask';
-import type { NotificationType } from '../Notification/Notification';
-import styles from './ListTask.module.scss';
+
+// TYPES
+import type { Filter, Task, NotificationType } from '../../types';
+
+// HOOKS
 import { useEffect, useState } from 'react';
 
-export type Task = {
-    id: number;
-    title: string;
-    created: string;
-    isDone: boolean;
-};
+// STYLES
+import styles from './ListTask.module.scss';
 
 export default function ListTask({
     currentFilter,

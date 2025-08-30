@@ -1,20 +1,17 @@
-import styles from './FilterTask.module.scss';
-import type { Response, Filter } from '../../App';
+// TYPES
+import type { Filter, TodoInfo, FilteredAmount } from '../../types';
+
+// HOOKS
 import { useEffect, useState } from 'react';
+
+// STYLES
+import styles from './FilterTask.module.scss';
 
 const options = [
     { filter: 'all', label: 'Все' },
     { filter: 'completed', label: 'Выполненные' },
     { filter: 'inWork', label: 'В прогрессе' },
 ];
-
-type TodoInfo = Response['info'];
-
-type FilteredAmount = {
-    filter: string;
-    label: string;
-    amount: number;
-};
 
 export default function FilterTask({
     currentFilter,
