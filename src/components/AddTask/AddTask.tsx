@@ -53,7 +53,7 @@ export default function AddTask({
                 type: 'success',
                 message: 'Задача успешно добавлена',
             });
-        } catch (err) {
+        } catch {
             appearToast({
                 type: 'error',
                 message: 'Не удалось добавить задачу',

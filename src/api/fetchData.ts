@@ -1,6 +1,10 @@
+import type { Filter } from '../types';
+
 const API_URL = 'https://easydev.club/api/v1';
 
-export async function getData(filter: string = 'all'): Promise<JSON> {
+export async function getData<TResponse>(
+    filter: Filter = 'all'
+): Promise<TResponse> {
     const response = await fetch(`${API_URL}/todos?filter=${filter}`);
     if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -10,7 +14,9 @@ export async function getData(filter: string = 'all'): Promise<JSON> {
     return json;
 }
 
-export async function postData(data: any): Promise<JSON> {
+export async function postData<TRequest, TResponse>(
+    data: TRequest
+): Promise<TResponse> {
     const response = await fetch(`${API_URL}/todos`, {
         method: 'POST',
         headers: {
@@ -26,7 +32,10 @@ export async function postData(data: any): Promise<JSON> {
     return json;
 }
 
-export async function putData(id: number, data: any): Promise<JSON> {
+export async function putData<TRequest, TResponse>(
+    id: number,
+    data: TRequest
+): Promise<TResponse> {
     const response = await fetch(`${API_URL}/todos/${id}`, {
         method: 'PUT',
         headers: {

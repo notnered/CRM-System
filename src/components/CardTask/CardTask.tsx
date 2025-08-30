@@ -36,7 +36,7 @@ export default function CardTask({
         try {
             await putData(id, { isDone: isDoneStatus });
             setComplete(isDoneStatus);
-        } catch (err) {
+        } catch {
             appearToast({
                 type: 'error',
                 message: 'Не удалось обновить задачу',
@@ -53,7 +53,7 @@ export default function CardTask({
                 type: 'success',
                 message: 'Задача удалена',
             });
-        } catch (err) {
+        } catch {
             appearToast({
                 type: 'error',
                 message: 'Не удалось удалить задачу',
@@ -96,7 +96,7 @@ export default function CardTask({
                 type: 'success',
                 message: 'Задача обновлена',
             });
-        } catch (err) {
+        } catch {
             appearToast({
                 type: 'error',
                 message: 'Не удалось обновить задачу',

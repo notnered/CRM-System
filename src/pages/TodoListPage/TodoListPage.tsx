@@ -24,7 +24,7 @@ export default function TodoListPage() {
     );
 
     async function refreshData(filter: Filter = 'all') {
-        const data = await getData(filter);
+        const data = await getData<Response>(filter);
         setTodosData(data);
     }
 
