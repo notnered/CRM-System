@@ -1,0 +1,54 @@
+const API_URL = 'https://easydev.club/api/v1';
+
+export async function getData(filter: string = 'all'): Promise<JSON> {
+    const response = await fetch(`${API_URL}/todos?filter=${filter}`);
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const json = await response.json();
+    return json;
+}
+
+export async function postData(data: any): Promise<JSON> {
+    const response = await fetch(`${API_URL}/todos`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const json = await response.json();
+    return json;
+}
+
+export async function putData(id: number, data: any): Promise<JSON> {
+    const response = await fetch(`${API_URL}/todos/${id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const json = await response.json();
+    return json;
+}
+
+export async function deleteData(id: number): Promise<void> {
+    const response = await fetch(`${API_URL}/todos/${id}`, {
+        method: 'DELETE',
+    });
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return;
+}
