@@ -24,8 +24,8 @@
             border-radius: 50%;
         }
         input[type='checkbox']:checked + .circle {
-            background-color: #0096d1;
-            border-color: #0096d1;
+            background-color: $color-primary;
+            border-color: $color-primary;
             &::after {
                 position: absolute;
                 left: 25%;
@@ -51,10 +51,10 @@
             color: white;
         }
         & button.edit {
-            background: #0096d1;
+            background: $color-primary;
         }
         & button.delete {
-            background: #d10000;
+            background: $color-danger;
         }
     }
 }

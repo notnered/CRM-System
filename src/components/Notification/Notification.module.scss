@@ -24,11 +24,11 @@
 }
 
 .success {
-    border-top: 4px solid #00d123;
+    border-top: 4px solid $color-success;
 }
 
 .error {
-    border-top: 4px solid #d10000;
+    border-top: 4px solid $color-danger;
 }
 
 @keyframes fade {
