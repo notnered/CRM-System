@@ -2,7 +2,7 @@
 import type { Filter, NotificationType } from '../../types';
 
 // HOOKS
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 
 // API
 import { postData } from '../../api/fetchData';
@@ -20,12 +20,17 @@ export default function AddTask({
     appearToast: (notification: NotificationType) => void;
 }) {
     const inputRef = useRef<HTMLInputElement>(null);
+    const [hasError, setHasError] = useState<boolean>(false);
+
     async function handleSubmit() {
+        setHasError(false);
+
         if (!inputRef.current) {
             appearToast({
                 type: 'error',
                 message: 'Не удается найти ссылку на ввод',
             });
+            setHasError(true);
             return;
         }
 
@@ -36,6 +41,8 @@ export default function AddTask({
                 type: 'error',
                 message: 'Длина новой задачи меньше 2 символов',
             });
+            setHasError(true);
+            inputRef.current.value = '';
             return;
         }
 
@@ -44,6 +51,8 @@ export default function AddTask({
                 type: 'error',
                 message: 'Длина новой задачи более 64 символов',
             });
+            setHasError(true);
+            inputRef.current.value = '';
             return;
         }
 
@@ -58,6 +67,7 @@ export default function AddTask({
                 type: 'error',
                 message: 'Не удалось добавить задачу',
             });
+            setHasError(true);
         } finally {
             refreshFunc(currentFilter);
             inputRef.current.value = '';
@@ -68,7 +78,7 @@ export default function AddTask({
         <div className={styles.box}>
             <input
                 name='task-name'
-                className={styles.input}
+                className={`${styles.input} ${hasError && styles.error}`}
                 type='text'
                 placeholder='Текст задачи'
                 ref={inputRef}
